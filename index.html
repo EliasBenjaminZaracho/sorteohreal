@@ -353,6 +353,66 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
       filter: grayscale(0.5);
     }
 
+    /* ---------- Tira de ganadores (Sorteo 3) ---------- */
+    .winners-strip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      max-width: 100%;
+    }
+
+    .winner-chip {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(245, 176, 65, 0.08);
+      border: 1px solid rgba(245, 176, 65, 0.35);
+      border-radius: 999px;
+      padding: 4px 13px;
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .winner-chip b {
+      color: var(--gold);
+      font-size: 0.72rem;
+      letter-spacing: 0.5px;
+    }
+
+    .winner-chip span {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #f6ece4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 30vw;
+    }
+
+    .reset-winners {
+      background: transparent;
+      border: 1px solid rgba(245, 176, 65, 0.4);
+      color: var(--gold);
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 0.9rem;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      transition: all 0.18s;
+    }
+
+    .reset-winners:hover {
+      background: rgba(245, 176, 65, 0.15);
+      transform: rotate(-40deg);
+    }
+
     /* ---------- Winner modal ---------- */
     .modal-overlay {
       position: fixed;
@@ -477,6 +537,27 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
     .btn-modal-close:hover {
       transform: scale(1.04);
       box-shadow: 0 8px 25px rgba(245, 176, 65, 0.7);
+    }
+
+    .btn-modal-second {
+      margin-top: 10px;
+      width: 100%;
+      max-width: 420px;
+      padding: 12px 24px;
+      border-radius: 40px;
+      background: rgba(245, 176, 65, 0.1);
+      border: 2px solid var(--gold);
+      color: #ffd9a0;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-modal-second:hover {
+      background: rgba(245, 176, 65, 0.22);
+      transform: translateY(-1px);
     }
 
     /* ==================== RESPONSIVE ==================== */
@@ -650,6 +731,21 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
         width: 100%;
         padding: 12px 18px;
         font-size: 0.96rem;
+      }
+
+      .btn-modal-second {
+        font-size: 0.9rem;
+        padding: 11px 16px;
+      }
+
+      .winner-chip {
+        padding: 3px 10px;
+        gap: 5px;
+      }
+
+      .winner-chip span {
+        font-size: 0.76rem;
+        max-width: 34vw;
       }
     }
 
@@ -857,6 +953,11 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
       </div>
 
       <div class="bottom-bar">
+        <div class="winners-strip" id="strip3" hidden>
+          <div class="winner-chip"><b>1°</b><span id="w3first">—</span></div>
+          <div class="winner-chip"><b>2°</b><span id="w3second">—</span></div>
+          <button class="reset-winners" id="reset3" title="Reiniciar Sorteo 3">↺</button>
+        </div>
         <div class="live-pointer-label">
           <span>Posición actual:</span>
           <span class="user-tag" id="label3">...</span>
@@ -869,7 +970,7 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
 
   <div class="modal-overlay" id="winnerModal">
     <div class="winner-modal">
-      <h2>¡Tenemos Ganador/a!</h2>
+      <h2 id="modalTitle">¡Tenemos Ganador/a!</h2>
       <div class="modal-prize-box">
         <img id="modalPrizeImg" alt="Premio M de Chocolates">
       </div>
@@ -879,6 +980,7 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
         <div class="winner-number" id="winnerModalIndex">Ticket #001</div>
       </div>
       <button class="btn-modal-close" id="btnCloseModal">Cerrar / Sortear otro</button>
+      <button class="btn-modal-second" id="btnSecond" hidden>🥈 Sortear el 2do ganador</button>
     </div>
   </div>
 
@@ -988,7 +1090,9 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
           cap: document.getElementById('cap' + numero),
           angulo: Math.random() * Math.PI * 2,
           girando: false,
-          ultimoIdx: -1
+          ultimoIdx: -1,
+          base: participantes.slice(),
+          ganadores: []
         };
       }
 
@@ -1118,6 +1222,7 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
       /* ---------- Giro ---------- */
       function girar(p) {
         if (p.girando) return;
+        if (p.numero === 3 && p.ganadores.length >= 2) return;
         initAudio();
 
         p.girando = true;
@@ -1150,8 +1255,32 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
           } else {
             p.girando = false;
             p.btn.disabled = false;
+
             const idx = indiceApuntado(p);
-            anunciar(p, idx);
+            const nombre = p.participantes[idx];
+            const total = p.participantes.length;
+
+            if (p.numero === 3) {
+              p.ganadores.push(nombre);
+              actualizarTira3(p);
+            }
+
+            anunciar(p, nombre, idx, total);
+
+            // El 1er ganador sale de la ruleta para poder sortear el 2do
+            if (p.numero === 3 && p.ganadores.length === 1) {
+              const j = p.participantes.indexOf(nombre);
+              if (j >= 0) p.participantes.splice(j, 1);
+              p.ultimoIdx = -1;
+              dibujarRuleta(p);
+              actualizarTicker(p, true);
+              document.getElementById('count3').textContent = p.participantes.length;
+            }
+
+            // Con dos ganadores definidos, la ruleta queda cerrada
+            if (p.numero === 3 && p.ganadores.length >= 2) {
+              p.btn.disabled = true;
+            }
           }
         }
 
@@ -1160,8 +1289,16 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
 
       /* ---------- Ganador ---------- */
       const modal = document.getElementById('winnerModal');
+      const btnSecond = document.getElementById('btnSecond');
 
-      function anunciar(p, idx) {
+      function actualizarTira3(p) {
+        const strip = document.getElementById('strip3');
+        strip.hidden = p.ganadores.length === 0;
+        document.getElementById('w3first').textContent = p.ganadores[0] || '—';
+        document.getElementById('w3second').textContent = p.ganadores[1] || '—';
+      }
+
+      function anunciar(p, nombre, idx, total) {
         playFanfare();
 
         confetti({
@@ -1171,10 +1308,22 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
           colors: ['#f5b041', '#ffffff', '#e74c3c', '#d35400', '#27ae60']
         });
 
-        document.getElementById('winnerTag').textContent = p.titulo;
-        document.getElementById('winnerModalName').textContent = p.participantes[idx];
+        let titulo = '¡Tenemos Ganador/a!';
+        let etiqueta = p.titulo;
+
+        if (p.numero === 3) {
+          const esPrimero = p.ganadores.length === 1;
+          titulo = esPrimero ? '¡Tenemos 1er Ganador!' : '¡Tenemos 2do Ganador!';
+          etiqueta = p.titulo + ' · ' + (esPrimero ? '1er ganador' : '2do ganador');
+        }
+
+        document.getElementById('modalTitle').textContent = titulo;
+        document.getElementById('winnerTag').textContent = etiqueta;
+        document.getElementById('winnerModalName').textContent = nombre;
         document.getElementById('winnerModalIndex').textContent =
-          'Ticket #' + (idx + 1) + ' de ' + p.participantes.length;
+          'Ticket #' + (idx + 1) + ' de ' + total;
+
+        btnSecond.hidden = !(p.numero === 3 && p.ganadores.length === 1);
 
         modal.classList.add('active');
       }
@@ -1224,6 +1373,26 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
 
       document.getElementById('btnCloseModal').addEventListener('click', function () {
         modal.classList.remove('active');
+      });
+
+      // Sortear el 2do ganador del Sorteo 3
+      btnSecond.addEventListener('click', function () {
+        const p = paginas[2];
+        modal.classList.remove('active');
+        setTimeout(function () { girar(p); }, 400);
+      });
+
+      // Reiniciar el Sorteo 3 (devuelve todos los participantes y borra ganadores)
+      document.getElementById('reset3').addEventListener('click', function () {
+        const p = paginas[2];
+        p.participantes = p.base.slice();
+        p.ganadores = [];
+        p.ultimoIdx = -1;
+        p.btn.disabled = false;
+        document.getElementById('count3').textContent = p.participantes.length;
+        actualizarTira3(p);
+        dibujarRuleta(p);
+        actualizarTicker(p, true);
       });
 
       modal.addEventListener('click', function (e) {

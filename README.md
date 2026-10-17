@@ -16,6 +16,13 @@ https://sorteohreal.vercel.app
 
 Cada solapa tiene su propia ruleta, su propio ángulo y su propio estado de giro: se puede sortear en una sin afectar a las otras.
 
+### Sorteo 3: dos ganadores
+
+1. Primer giro → **1er ganador**. El cartel ofrece el botón **"Sortear el 2do ganador"**.
+2. Al tocarlo, el 1er ganador **sale de la ruleta** (quedan 240) y se gira de nuevo.
+3. Segundo giro → **2do ganador**, con su propio cartel y número de ticket.
+4. Abajo queda la tira **1° / 2°** con ambos nombres y un botón **↺** para reiniciar el sorteo (vuelve a 241 y borra los ganadores).
+
 ## Características
 
 - Ruleta con desaceleración realista, ticks de sonido y aguja que rebota.
