@@ -20,3 +20,4 @@ Abrí `index.html` en el navegador o entrá a la demo. Botón **¡Girar Ruleta!*
 ## Deploy
 
 Proyecto de Vercel `sorteohreal`, desplegado desde este repositorio.
+Deploy automático activado: cada push a main redeploya en Vercel.
