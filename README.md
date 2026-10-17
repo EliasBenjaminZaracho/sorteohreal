@@ -1,4 +1,4 @@
-# Sorteos Heladería Real 🍫
+﻿# Sorteos Heladería Real 🍫
 
 Ruleta interactiva para los sorteos de la **M de chocolates artesanales + café en vasito comestible** de Heladería Real.
 

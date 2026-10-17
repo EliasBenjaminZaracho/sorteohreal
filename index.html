@@ -29,6 +29,11 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
       user-select: none;
     }
 
+    /* El atributo hidden debe ganarle a cualquier display de clase */
+    [hidden] {
+      display: none !important;
+    }
+
     body {
       background: radial-gradient(circle at 50% 50%, #201109 0%, #110704 60%, #060201 100%);
       color: var(--text-main);
@@ -193,7 +198,7 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
       align-items: center;
       justify-content: center;
       width: 100%;
-      padding: 18px 0 6px;
+      padding: 30px 0 6px;
     }
 
     .wheel-stage {
@@ -484,6 +489,41 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
       display: block;
     }
 
+    /* Premio en texto (Sorteo 3) */
+    .prize-text {
+      width: 100%;
+      max-width: 380px;
+      margin: 0 auto 16px;
+      padding: 22px 20px;
+      border-radius: 18px;
+      border: 3px solid var(--gold);
+      background: radial-gradient(circle at 50% 25%, rgba(245, 176, 65, 0.22) 0%, rgba(30, 12, 5, 0.75) 70%);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8), 0 0 25px rgba(245, 176, 65, 0.35);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-align: center;
+    }
+
+    .prize-text .prize-emoji {
+      font-size: 2.4rem;
+      line-height: 1;
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.6));
+    }
+
+    .prize-text .prize-line {
+      font-size: 1.4rem;
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      background: var(--gold-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
     .winner-box-name {
       background: rgba(0, 0, 0, 0.7);
       border: 2px solid var(--gold);
@@ -738,6 +778,21 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
         padding: 11px 16px;
       }
 
+      .prize-text {
+        padding: 16px 14px;
+        border-width: 2px;
+        border-radius: 14px;
+        gap: 4px;
+      }
+
+      .prize-text .prize-emoji {
+        font-size: 1.9rem;
+      }
+
+      .prize-text .prize-line {
+        font-size: clamp(1.15rem, 5.6vw, 1.45rem);
+      }
+
       .winner-chip {
         padding: 3px 10px;
         gap: 5px;
@@ -745,7 +800,7 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
 
       .winner-chip span {
         font-size: 0.76rem;
-        max-width: 34vw;
+        max-width: 40vw;
       }
     }
 
@@ -971,8 +1026,12 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
   <div class="modal-overlay" id="winnerModal">
     <div class="winner-modal">
       <h2 id="modalTitle">¡Tenemos Ganador/a!</h2>
-      <div class="modal-prize-box">
+      <div class="modal-prize-box" id="prizeBox">
         <img id="modalPrizeImg" alt="Premio M de Chocolates">
+      </div>
+      <div class="prize-text" id="prizeText" hidden>
+        <span class="prize-emoji">🍦</span>
+        <span class="prize-line">Ganaste un kg de helado</span>
       </div>
       <div class="winner-box-name">
         <div class="winner-label-tag" id="winnerTag">Sorteo 1</div>
@@ -1305,6 +1364,7 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
           particleCount: 200,
           spread: 100,
           origin: { y: 0.55 },
+          zIndex: 90,
           colors: ['#f5b041', '#ffffff', '#e74c3c', '#d35400', '#27ae60']
         });
 
@@ -1322,6 +1382,11 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
         document.getElementById('winnerModalName').textContent = nombre;
         document.getElementById('winnerModalIndex').textContent =
           'Ticket #' + (idx + 1) + ' de ' + total;
+
+        // Sorteo 3: el premio es un kg de helado (texto, sin foto)
+        const esSorteo3 = p.numero === 3;
+        document.getElementById('prizeBox').hidden = esSorteo3;
+        document.getElementById('prizeText').hidden = !esSorteo3;
 
         btnSecond.hidden = !(p.numero === 3 && p.ganadores.length === 1);
 
