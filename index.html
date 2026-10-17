@@ -72,7 +72,9 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
 
     .logo-real {
       height: 54px;
-      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.6));
+      border-radius: 22%;
+      background: #ffffff;
+      filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.55));
       object-fit: contain;
     }
 
@@ -358,14 +360,29 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
       filter: grayscale(0.5);
     }
 
-    /* ---------- Tira de ganadores (Sorteo 3) ---------- */
-    .winners-strip {
+    /* ---------- Panel de ganadores (Sorteo 3) ---------- */
+    .winners-panel {
       display: flex;
-      align-items: center;
-      justify-content: center;
+      flex-direction: column;
       gap: 8px;
-      flex-wrap: wrap;
+      background: linear-gradient(180deg, rgba(46, 22, 12, 0.95) 0%, rgba(20, 10, 6, 0.95) 100%);
+      border: 1px solid rgba(245, 176, 65, 0.4);
+      border-radius: 18px;
+      padding: 14px 14px 12px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7), 0 0 22px rgba(245, 176, 65, 0.12);
+      backdrop-filter: blur(6px);
+      position: relative;
+      z-index: 15;
       max-width: 100%;
+    }
+
+    .winners-title {
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 2px;
     }
 
     .winner-chip {
@@ -373,9 +390,9 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
       align-items: center;
       gap: 7px;
       background: rgba(245, 176, 65, 0.08);
-      border: 1px solid rgba(245, 176, 65, 0.35);
+      border: 1px solid rgba(245, 176, 65, 0.3);
       border-radius: 999px;
-      padding: 4px 13px;
+      padding: 5px 12px;
       min-width: 0;
       max-width: 100%;
     }
@@ -384,6 +401,7 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
       color: var(--gold);
       font-size: 0.72rem;
       letter-spacing: 0.5px;
+      flex-shrink: 0;
     }
 
     .winner-chip span {
@@ -393,7 +411,7 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 30vw;
+      min-width: 0;
     }
 
     .reset-winners {
@@ -410,12 +428,29 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
       align-items: center;
       justify-content: center;
       padding: 0;
+      align-self: flex-end;
       transition: all 0.18s;
+      flex-shrink: 0;
     }
 
     .reset-winners:hover {
       background: rgba(245, 176, 65, 0.15);
       transform: rotate(-40deg);
+    }
+
+    /* En pantallas anchas el panel va al costado de la ruleta */
+    @media (min-width: 1180px) {
+      #page-3 {
+        position: relative;
+      }
+
+      .winners-panel {
+        position: absolute;
+        right: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 250px;
+      }
     }
 
     /* ---------- Winner modal ---------- */
@@ -648,6 +683,26 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
         font-size: 0.78rem;
         padding: 4px 14px;
       }
+
+      /* El panel de ganadores pasa a fila arriba de la ruleta */
+      .winners-panel {
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 7px 10px;
+        border-radius: 14px;
+        width: auto;
+      }
+
+      .winners-title {
+        display: none;
+      }
+
+      .reset-winners {
+        align-self: center;
+      }
     }
 
     @media (max-width: 600px) {
@@ -796,11 +851,12 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
       .winner-chip {
         padding: 3px 10px;
         gap: 5px;
+        max-width: 46vw;
       }
 
       .winner-chip span {
         font-size: 0.76rem;
-        max-width: 40vw;
+        max-width: 32vw;
       }
     }
 
@@ -859,9 +915,10 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
       .page.active {
         display: grid;
         grid-template-columns: 1fr 0.92fr;
-        grid-template-rows: auto 1fr;
+        grid-template-rows: auto auto 1fr;
         grid-template-areas:
           "wheel count"
+          "wheel panel"
           "wheel bar";
         gap: 4px 18px;
         align-items: center;
@@ -879,10 +936,27 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
         font-size: 0.74rem;
       }
 
+      .winners-panel {
+        grid-area: panel;
+        justify-self: center;
+        align-self: center;
+      }
+
       .bottom-bar {
         grid-area: bar;
         align-self: center;
         max-width: 340px;
+      }
+
+      .live-pointer-label {
+        flex-direction: column;
+        gap: 1px;
+        padding: 6px 14px;
+      }
+
+      .live-pointer-label .user-tag {
+        max-width: 100%;
+        font-size: 0.95rem;
       }
 
       .wheel-stage {
@@ -989,6 +1063,13 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
     <section class="page" id="page-3">
       <div class="page-count">🎯 <b id="count3">0</b> participantes en juego</div>
 
+      <div class="winners-panel" id="strip3" hidden>
+        <div class="winners-title">Ganadores</div>
+        <div class="winner-chip"><b>1°</b><span id="w3first">—</span></div>
+        <div class="winner-chip"><b>2°</b><span id="w3second">—</span></div>
+        <button class="reset-winners" id="reset3" title="Reiniciar Sorteo 3">↺</button>
+      </div>
+
       <div class="roulette-container">
         <div class="wheel-stage">
           <div class="pointer-arrow" id="pointer3">
@@ -1008,11 +1089,6 @@ const PARTICIPANTES = ["a.liz1977","adrii.martiinez17","agustina__perez","ale_ma
       </div>
 
       <div class="bottom-bar">
-        <div class="winners-strip" id="strip3" hidden>
-          <div class="winner-chip"><b>1°</b><span id="w3first">—</span></div>
-          <div class="winner-chip"><b>2°</b><span id="w3second">—</span></div>
-          <button class="reset-winners" id="reset3" title="Reiniciar Sorteo 3">↺</button>
-        </div>
         <div class="live-pointer-label">
           <span>Posición actual:</span>
           <span class="user-tag" id="label3">...</span>
